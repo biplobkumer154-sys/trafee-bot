@@ -17,7 +17,7 @@ def webhook():
         else (request.json or request.form.to_dict())
     )
 
-    # Tracking parameter theke name/ID dhorar jonno
+    # Capturing the name/sub-id from tracking parameters
     lead_holder = (
         data.get("track")
         or data.get("sub_source")
@@ -26,22 +26,16 @@ def webhook():
         or "Rakib"
     )
 
+    conversion_id = (
+        data.get("transaction_id") or data.get("clickid") or "N/A"
+    )
+    payout = data.get("sum") or data.get("payout") or "0.00"
     country = data.get("country", "N/A").upper()
-    currency = data.get("currency", "USD")
-    sum_payout = data.get("sum") or data.get("payout") or "0.00"
-    sale_time = data.get("sale_time", "N/A")
-    smartlink_name = data.get("name", "CONGRATTULATIONS_NEW")
-    ext_click_id = data.get("ext_click_id", "N/A")
-    transaction_id = data.get("transaction_id", "N/A")
-    int_click_id = data.get("int_click_id", "N/A")
-    adv_tid = data.get("adv_tid", "N/A")
-    ext1 = data.get("ext1", "N/A")
-    ext2 = data.get("ext2", "N/A")
-    ext3 = data.get("ext3", "N/A")
+    smartlink_name = data.get("name", "Adult dating 1")
 
-    # Device detection logic
+    # Device detection logic to prevent showing literal '{device}'
     device = data.get("device")
-    if not device or device == "N/A" or device == "":
+    if not device or device == "N/A" or device == "" or "{" in device:
       user_agent = request.headers.get("User-Agent", "").lower()
       if "iphone" in user_agent or "ipad" in user_agent:
         device = "iPhone"
@@ -52,18 +46,17 @@ def webhook():
       else:
         device = "Mobile"
 
-    # Screen shot onujayi shob parameter soho message format
+    # Your exact requested message format
     message = (
-        f"🎁 *{smartlink_name}* 🎁\n\n"
-        f"🆔: `{lead_holder}`\n"
-        f"🌐: `{country}`\n"
-        f"💰: `{sum_payout} {currency}`\n"
-        f"📱: `{device}`\n"
-        f"🕒: `{sale_time}`\n"
-        f"🟥: `{ext_click_id}`\n"
-        f"🆔 Tx: `{transaction_id}`\n"
-        f"🔗 Ext1: `{ext1}`\n"
-        f"🗼: `Mobile`"
+        f"📢 *Account__sihab New Alert* 🚨\n\n"
+        f"👤 *Lead Holder:* `{lead_holder}`\n"
+        f"📦 *Conversion ID:* `{conversion_id}`\n"
+        f"💲 *Payout:* `${payout}`\n"
+        f"🌐 *Country:* `{country}`\n"
+        f"📱 *Device:* `{device}`\n"
+        f"🏷️ *Smartlink:* `{smartlink_name}`\n"
+        f"💻 *Panel:* `Sihab-1`\n\n"
+        f"✅ *Thanks_lot For This Lead* ❤️"
     )
 
     url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
