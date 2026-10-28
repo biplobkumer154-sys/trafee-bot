@@ -1,6 +1,6 @@
 import os
 import requests
-from Flask import Flask, request
+from flask import Flask, request
 
 BOT_TOKEN = "8963386722:AAEF6MjWm1C9ik6EK9aCDFMpI5mdtvmYYY8"
 CHAT_ID = "-1004487308836"
@@ -17,22 +17,19 @@ def webhook():
         else (request.json or request.form.to_dict())
     )
 
-    # Track ba subid ba sub_source theke asli nam/subid dhorbe
+    # Capturing the name/sub-id from tracking parameters
     lead_holder = (
         data.get("track")
-        or data.get("subid")
         or data.get("sub_source")
+        or data.get("ext1")
+        or data.get("name")
         or "Rakib"
     )
 
-    conversion_id = (
-        data.get("transaction_id") or data.get("clickid") or "N/A"
-    )
-    payout = data.get("sum") or data.get("payout") * 0.00
+    payout = data.get("sum") or data.get("payout") or "0.00"
     country = data.get("country", "N/A").upper()
-    ip_address = (
-        data.get("ip") or request.remote_addr or "N/A"
-    )  # IP address dhorar jonno
+    ip_address = data.get("ext_click_id") or request.remote_addr or "N/A"
+    smartlink_name = data.get("name", "CONGRATTULATIONS_NEW")
 
     # Device detection logic
     device = data.get("device")
@@ -47,9 +44,7 @@ def webhook():
       else:
         device = "Mobile"
 
-    smartlink_name = data.get("name", "CONGRATTULATIONS_NEW")
-
-    # Screen shot er design onujayi message format
+    # Your preferred message format
     message = (
         f"🎁 *{smartlink_name}* 🎁\n\n"
         f"🆔: `{lead_holder}`\n"
