@@ -49,7 +49,7 @@ def webhook():
     # Your exact requested message format
     message = (
         f"📢 *Account__sihab New Alert* 🚨\n\n"
-        f"👤 *Lead Holder:* `{lead_holder}`\n"
+        f"👤 *Lead Holder:* `{ext1}`\n"
         f"📦 *Conversion ID:* `{conversion_id}`\n"
         f"💲 *Payout:* `${payout}`\n"
         f"🌐 *Country:* `{country}`\n"
