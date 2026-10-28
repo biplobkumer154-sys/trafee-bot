@@ -17,20 +17,21 @@ def webhook():
         else (request.json or request.form.to_dict())
     )
 
+    # Ekhane track ba subid ke sab theke beshi priority dewa holo
     lead_holder = (
-        data.get("subid")
-        or data.get("track")
+        data.get("track")
+        or data.get("subid")
         or data.get("sub_source")
-        or data.get("name")
-        or "Sihab"
+        or "Rakib"
     )
+
     conversion_id = (
         data.get("transaction_id") or data.get("clickid") or "N/A"
     )
     payout = data.get("sum") or data.get("payout") or "0.00"
     country = data.get("country", "N/A").upper()
 
-    # Device detection logic: Trafee theke na asle request header theke dhorbe
+    # Device detection logic
     device = data.get("device")
     if not device or device == "N/A" or device == "":
       user_agent = request.headers.get("User-Agent", "").lower()
