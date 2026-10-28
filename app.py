@@ -17,21 +17,32 @@ def webhook():
         else (request.json or request.form.to_dict())
     )
 
-    # Lead Holder / Sub ID dhorar jonno
-    raw_sub = (
+    lead_holder = (
         data.get("subid")
         or data.get("track")
         or data.get("sub_source")
         or data.get("name")
+        or "Sihab"
     )
-    lead_holder = raw_sub if raw_sub and raw_sub.strip() != "" else "Sihab"
-
     conversion_id = (
         data.get("transaction_id") or data.get("clickid") or "N/A"
     )
     payout = data.get("sum") or data.get("payout") or "0.00"
     country = data.get("country", "N/A").upper()
-    device = data.get("device", "N/A")
+
+    # Device detection logic: Trafee theke na asle request header theke dhorbe
+    device = data.get("device")
+    if not device or device == "N/A" or device == "":
+      user_agent = request.headers.get("User-Agent", "").lower()
+      if "iphone" in user_agent or "ipad" in user_agent:
+        device = "iPhone/iOS"
+      elif "android" in user_agent:
+        device = "Android"
+      elif "windows" in user_agent or "macintosh" in user_agent:
+        device = "Desktop"
+      else:
+        device = "Mobile/Unknown"
+
     smartlink_name = data.get("name", "N/A")
 
     message = (
