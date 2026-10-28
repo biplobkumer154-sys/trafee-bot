@@ -17,9 +17,10 @@ def webhook():
         else (request.json or request.form.to_dict())
     )
 
-    # Capturing the name/sub-id from tracking parameters
+    # Track ba subid ba sub_source theke apnar dewa namti dhorte parbe
     lead_holder = (
         data.get("track")
+        or data.get("subid")
         or data.get("sub_source")
         or data.get("ext1")
         or data.get("name")
@@ -33,7 +34,7 @@ def webhook():
     country = data.get("country", "N/A").upper()
     smartlink_name = data.get("name", "Adult dating 1")
 
-    # Device detection logic to prevent showing literal '{device}'
+    # Device detection logic
     device = data.get("device")
     if not device or device == "N/A" or device == "" or "{" in device:
       user_agent = request.headers.get("User-Agent", "").lower()
@@ -46,10 +47,10 @@ def webhook():
       else:
         device = "Mobile"
 
-    # Your exact requested message format
+    # Apnar screen shot-er moto ID: nam design format
     message = (
         f"📢 *Account__sihab New Alert* 🚨\n\n"
-        f"👤 *Lead Holder:* `{ext1}`\n"
+        f"🆔: `{lead_holder}`\n"
         f"📦 *Conversion ID:* `{conversion_id}`\n"
         f"💲 *Payout:* `${payout}`\n"
         f"🌐 *Country:* `{country}`\n"
