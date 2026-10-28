@@ -11,18 +11,28 @@ app = Flask(__name__)
 @app.route("/webhook", methods=["GET", "POST"])
 def webhook():
   try:
-    # Trafee theke asha shob parameter gulo dhortese
     data = (
         request.args
         if request.method == "GET"
         else (request.json or request.form.to_dict())
     )
 
-    lead_holder = data.get("sub_source", data.get("subid", "N/A"))
-    conversion_id = data.get("transaction_id", data.get("clickid", "N/A"))
-    payout = data.get("sum", data.get("payout", "0.00"))
+    # Lead Holder / Sub ID dhorar jonno
+    raw_sub = (
+        data.get("subid")
+        or data.get("track")
+        or data.get("sub_source")
+        or data.get("name")
+    )
+    lead_holder = raw_sub if raw_sub and raw_sub.strip() != "" else "Sihab"
+
+    conversion_id = (
+        data.get("transaction_id") or data.get("clickid") or "N/A"
+    )
+    payout = data.get("sum") or data.get("payout") or "0.00"
     country = data.get("country", "N/A").upper()
     device = data.get("device", "N/A")
+    smartlink_name = data.get("name", "N/A")
 
     message = (
         f"📢 *Account__sihab New Alert* 🚨\n\n"
@@ -31,6 +41,7 @@ def webhook():
         f"💲 *Payout:* `${payout}`\n"
         f"🌐 *Country:* `{country}`\n"
         f"📱 *Device:* `{device}`\n"
+        f"🏷️ *Smartlink:* `{smartlink_name}`\n"
         f"💻 *Panel:* `Sihab-1`\n\n"
         f"✅ *Thanks_lot For This Lead* ❤️"
     )
